@@ -6,6 +6,6 @@ public class ClickButton : MonoBehaviour
 {
     public void Click()
     {
-        GameManager.Instance.EarnMoney(GameManager.Instance.clickPower);
+        GameManager.Instance.EarnMoney(GameManager.Instance.ClickPower);
     }
 }

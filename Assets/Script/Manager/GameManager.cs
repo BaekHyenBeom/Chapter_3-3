@@ -18,13 +18,32 @@ public class GameManager : Singleton<GameManager>
     }
 
     [Header("Click Settings")]
-    public long clickPower;
+    private long clickPower;
+    public long ClickPower
+    {
+        get { return clickPower; }
+        set
+        {
+            clickPower = value;
+            curClickPowerTxt.text = $"{clickPower}";
+        }
+    }
     public TextMeshProUGUI curClickPowerTxt;
 
     [Header("Auto Settings")]
-    public long totalAutoPower;
-    // public List<GameObject> 그 autoClicker 인터페이스 만들어서 모아줘야할 듯..
+    private long totalAutoPower;
+    public long TotalAutoPower
+    {
+        get { return totalAutoPower; }
+        set
+        {
+            totalAutoPower = value;
+            curAutoPowerTxt.text = $"{totalAutoPower}/s";
+        }
+    }
+    public List<AutoClicker> autoClickers;
     public TextMeshProUGUI curAutoPowerTxt;
+    private Coroutine autoCoroutine;
 
     [Header("UI Objects")]
     public TextMeshProUGUI curMoneyTxt;
@@ -32,8 +51,39 @@ public class GameManager : Singleton<GameManager>
         // 초기 세팅
     void Start()
     {
-        curClickPowerTxt.text = $"{clickPower}";
-        curAutoPowerTxt.text = $"{totalAutoPower}/s";
+        ClickPower += 10; // 초기값;
+        curClickPowerTxt.text = $"{ClickPower}";
+        curAutoPowerTxt.text = $"{TotalAutoPower}/s";
+        StartAutoClicker();
+    }
+
+        // 자동 관련
+
+    public void CheckAllAutoAmount()
+    {
+        long totalValue = 0;
+        foreach(AutoClicker auto in autoClickers)
+        {
+            totalValue += auto.CheckValue();
+        }
+        TotalAutoPower = totalValue;
+    }
+
+    public void StartAutoClicker()
+    {
+        if (autoCoroutine == null)
+        {
+            autoCoroutine = StartCoroutine(AutoClickerActivate());
+        }
+    }
+
+    IEnumerator AutoClickerActivate()
+    {
+        while(true)
+        {
+            CurMoney += TotalAutoPower;
+            yield return new WaitForSeconds(1f);
+        }
     }
 
         // 돈 획득
