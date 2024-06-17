@@ -30,6 +30,16 @@ public class AutoClicker : MonoBehaviour
             if (curUpgrade == 0 && itemSO.isClick == false)
             {
                 GameManager.Instance.autoClickers.Add(this);
+                curPrice += itemSO.priceWeightAmount + curPrice;
+
+                curUpgrade++;
+            }
+            else if (curUpgrade == 0 && itemSO.isClick == true) // 저장 때문에
+            {
+                GameManager.Instance.clickUpgrade.Add(this);
+                GameManager.Instance.ClickPower += curValue;
+                curValue += itemSO.weightAmount;
+                curPrice += itemSO.priceWeightAmount + curPrice;
 
                 curUpgrade++;
             }
@@ -64,6 +74,16 @@ public class AutoClicker : MonoBehaviour
         return curValue;
     }
 
+    public long CheckUpgrade()
+    {
+        return curUpgrade;
+    }
+
+    public long CheckPrice()
+    {
+        return curPrice;
+    }
+
     public bool CheckMoney()
     {
         if (GameManager.Instance.CurMoney >= curPrice)
@@ -80,5 +100,27 @@ public class AutoClicker : MonoBehaviour
         upgradeTxt.text = $"+{curUpgrade}";
         descTxt.text = $"{itemSO._desc} 가격 :";
         priceTxt.text = $"{curPrice}";
+    }
+
+    public void LoadData(long _curValue ,long _curUpgrade, long _curPrice)
+    {
+        curValue = _curValue;
+        curUpgrade = _curUpgrade;
+        curPrice = _curPrice;
+        UISetting();
+        if (itemSO.isClick == true)
+        {
+            if (!GameManager.Instance.clickUpgrade.Contains(this))
+            {
+                GameManager.Instance.clickUpgrade.Add(this);
+            }
+        }
+        else if (itemSO.isClick == false)
+        {
+            if (!GameManager.Instance.autoClickers.Contains(this))
+            {
+                GameManager.Instance.autoClickers.Add(this);
+            }
+        }
     }
 }

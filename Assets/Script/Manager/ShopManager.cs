@@ -8,6 +8,7 @@ public class ShopManager : Singleton<ShopManager>
     public List<ShopItemSO> shopItems;
     public GameObject prefabs;
     public GameObject parent;
+    public List<AutoClicker> forSave;
 
     void Start()
     {
@@ -18,6 +19,7 @@ public class ShopManager : Singleton<ShopManager>
             {
                 component.itemSO = item;
             }
+            forSave.Add(obj.GetComponent<AutoClicker>());
         }
     }
 }
